@@ -5,6 +5,10 @@ import websockets
 from random import random
 from uuid import uuid4
 import logging
+import certifi
+import ssl
+
+context = ssl.create_default_context(cafile=certifi.where())
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +42,7 @@ class ConnectWebsocket:
         self._ws_details = self._client.get_ws_token(self._private)
         logger.debug(self._ws_details)
 
-        async with websockets.connect(self.get_ws_endpoint(), ssl=self.get_ws_encryption(),sock=self._sock) as socket:
+        async with websockets.connect(self.get_ws_endpoint(), ssl=context,sock=self._sock) as socket:
             self._socket = socket
             self._reconnect_num = 0
 
